@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hero C — Brutalist Kinetic Type</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#ece9e2; --bg-1:#e4e0d6; --bg-ink:#0a0a0d;
+    --rule:#0a0a0d; --mute:#7a766e; --paper:#f6f3ea;
+    --accent:#ef4444; --amber:#f59e0b; --cyan:#22d3ee;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Geist Mono',monospace;background:var(--bg-0);color:var(--bg-ink);overflow-x:hidden;min-height:100vh;-webkit-font-smoothing:antialiased}
+  ::selection{background:var(--accent);color:var(--paper)}
+  .serif{font-family:'Fraunces',serif}
+  .ital{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400}
+
+  /* newsprint background */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(800px 600px at 90% 10%, rgba(239,68,68,.08), transparent 60%),
+      radial-gradient(600px 500px at 0% 100%, rgba(10,10,13,.04), transparent 60%);
+  }
+  body::after{
+    content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.35;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence baseFrequency='0.85' numOctaves='2'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.07 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  /* header rule */
+  .top-rule{position:fixed;top:0;left:0;right:0;z-index:50;border-bottom:2px solid var(--rule);background:var(--bg-0);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+  .top-rule .left{display:flex;gap:28px;align-items:center}
+  .top-rule .mark{font-family:'Fraunces',serif;font-weight:800;font-size:18px;letter-spacing:-.02em;text-transform:none}
+  .top-rule .mark b{color:var(--accent)}
+  .top-rule .right{display:flex;gap:20px;align-items:center}
+  .dot-live{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block;animation:pulse 1.4s infinite;margin-right:8px}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+
+  /* masthead */
+  .masthead{padding:86px 24px 0;position:relative;z-index:2;border-bottom:2px solid var(--rule)}
+  .masthead-inner{max-width:1500px;margin:0 auto;display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:end;padding-bottom:18px}
+  .iss{font-size:11px;letter-spacing:.25em;text-transform:uppercase}
+  .issue-title{font-family:'Fraunces',serif;font-size:clamp(40px,6vw,72px);font-weight:900;letter-spacing:-.04em;line-height:.9;text-align:center}
+  .issue-title .ital{color:var(--accent)}
+  .issue-title small{display:block;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.3em;color:var(--mute);margin-top:6px;text-transform:uppercase;font-weight:500}
+
+  /* marquee ticker */
+  .ticker{border-bottom:2px solid var(--rule);background:var(--bg-ink);color:var(--paper);overflow:hidden;white-space:nowrap}
+  .ticker-track{display:inline-flex;gap:48px;padding:10px 0;animation:slide 30s linear infinite;font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+  .ticker-track span b{color:var(--accent)}
+  .ticker-track .sep{color:var(--mute)}
+  @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* hero body */
+  .hero{position:relative;z-index:2;padding:56px 24px 40px;max-width:1500px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:24px}
+
+  /* giant typography */
+  h1.kinetic{
+    font-family:'Fraunces',serif;
+    font-weight:900;
+    font-size:clamp(64px, 16vw, 260px);
+    line-height:.82;letter-spacing:-.055em;
+    text-align:left;
+    margin:0;
+    position:relative;
+  }
+  h1.kinetic .row{display:block;overflow:hidden}
+  h1.kinetic .row > span{display:inline-block;transform:translateY(110%);animation:wipe 1s cubic-bezier(.7,0,.2,1) forwards}
+  h1.kinetic .row:nth-child(1) > span{animation-delay:.05s}
+  h1.kinetic .row:nth-child(2) > span{animation-delay:.22s}
+  h1.kinetic .row:nth-child(3) > span{animation-delay:.38s}
+  @keyframes wipe{to{transform:translateY(0)}}
+  h1.kinetic .ital{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--accent);letter-spacing:-.02em}
+  h1.kinetic .stroke{-webkit-text-stroke:2px var(--rule);color:transparent}
+  h1.kinetic .swap{
+    display:inline-block;position:relative;vertical-align:baseline;
+  }
+  h1.kinetic .swap-inner{display:inline-block;animation:swap 6s steps(1) infinite}
+  @keyframes swap{
+    0%,22%{content:"mouse"}
+    25%,47%{content:"keyboard"}
+    50%,72%{content:"scroll"}
+    75%,97%{content:"drag"}
+  }
+
+  .hero-bottom{display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:start;padding-top:24px;border-top:2px solid var(--rule)}
+  .dek{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(18px,1.6vw,22px);line-height:1.45;max-width:540px;padding-top:18px;opacity:0;animation:fade 1s .7s forwards}
+  .dek .ital{color:var(--accent)}
+  @keyframes fade{to{opacity:1}}
+
+  .cta-block{display:flex;flex-direction:column;gap:14px;padding-top:14px;opacity:0;animation:fade .8s .9s forwards}
+  .btn{display:inline-flex;align-items:center;justify-content:space-between;gap:18px;padding:18px 22px;border:2px solid var(--rule);font-size:13px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;transition:all .2s cubic-bezier(.2,.8,.2,1)}
+  .btn .arrow{display:inline-block;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+  .btn:hover .arrow{transform:translateX(6px)}
+  .btn-ink{background:var(--bg-ink);color:var(--paper)}
+  .btn-ink:hover{background:var(--accent);border-color:var(--accent)}
+  .btn-paper{background:transparent;color:var(--bg-ink)}
+  .btn-paper:hover{background:var(--bg-ink);color:var(--paper)}
+  .fine{display:flex;gap:16px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--mute);padding-top:6px}
+  .fine b{color:var(--bg-ink)}
+
+  /* data strip — Swiss grid */
+  .data-grid{
+    max-width:1500px;margin:0 auto;padding:0 24px;position:relative;z-index:2;
+    display:grid;grid-template-columns:repeat(12,1fr);gap:0;border-top:2px solid var(--rule);border-bottom:2px solid var(--rule)
+  }
+  .cell{border-right:1px solid var(--rule);padding:22px 18px;position:relative;overflow:hidden}
+  .cell:last-child{border-right:0}
+  .cell-k{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--mute);margin-bottom:10px}
+  .cell-v{font-family:'Fraunces',serif;font-weight:700;font-size:34px;letter-spacing:-.02em;line-height:1}
+  .cell-v .u{font-family:'Geist Mono',monospace;font-size:12px;color:var(--mute);margin-left:4px;letter-spacing:.05em}
+  .c2{grid-column:span 2}.c3{grid-column:span 3}.c4{grid-column:span 4}.c6{grid-column:span 6}
+
+  .caption{
+    grid-column:span 6;padding:22px;display:flex;align-items:center;gap:18px;background:var(--bg-ink);color:var(--paper);
+  }
+  .caption .num{font-family:'Fraunces',serif;font-size:56px;font-weight:900;line-height:1;color:var(--accent);letter-spacing:-.04em}
+  .caption .txt{font-family:'Fraunces',serif;font-size:16px;line-height:1.4;max-width:420px}
+  .caption .txt .ital{font-family:'Instrument Serif',serif;font-style:italic;color:var(--accent)}
+
+  /* specimen block — oscilloscope */
+  .specimen{
+    grid-column:span 6;padding:18px;background:var(--paper);position:relative;overflow:hidden;
+    display:flex;flex-direction:column;gap:10px;min-height:180px
+  }
+  .specimen-head{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
+  .specimen-head .live{color:var(--accent)}
+  .scope{flex:1;position:relative}
+  .scope svg{width:100%;height:100%}
+  .wave{fill:none;stroke:var(--bg-ink);stroke-width:1.4}
+  .wave.red{stroke:var(--accent);stroke-width:1.8}
+  .dash{stroke:var(--mute);stroke-width:.5;stroke-dasharray:2 4;fill:none}
+
+  /* bottom footer rule */
+  .bottom-rule{max-width:1500px;margin:0 auto;padding:16px 24px;display:flex;justify-content:space-between;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--mute)}
+
+  @media (max-width:900px){
+    .hero-bottom{grid-template-columns:1fr}
+    .data-grid{grid-template-columns:repeat(6,1fr)}
+    .c2,.c3,.c4{grid-column:span 3}.c6,.caption,.specimen{grid-column:span 6}
+  }
+</style>
+</head>
+<body>
+
+<div class="top-rule">
+  <div class="left">
+    <span class="mark">Macro<b>Deck</b></span>
+    <span>No. 01 · VOL. I</span>
+    <span>MMXXVI</span>
+  </div>
+  <div class="right">
+    <span><span class="dot-live"></span>LIVE WIRE</span>
+    <span>HERO / C · BRUTALIST</span>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="iss">Est. 2026<br>Price · $15</div>
+    <h2 class="issue-title">The Macro <span class="ital">Gazette</span>
+      <small>A quarterly on precision input · Issue One</small>
+    </h2>
+    <div class="iss" style="text-align:right">macOS · Windows<br>One-time license</div>
+  </div>
+</header>
+
+<div class="ticker">
+  <div class="ticker-track">
+    <span>● RECORDING <b>1,284 EV/S</b></span><span class="sep">///</span>
+    <span>DRIFT <b>±0.3 PX</b></span><span class="sep">///</span>
+    <span>SESSION <b>00:04.218</b></span><span class="sep">///</span>
+    <span>MACOS · WINDOWS · <b>$15 ONE-TIME</b></span><span class="sep">///</span>
+    <span>NO SUBSCRIPTIONS</span><span class="sep">///</span>
+    <span>NO CLOUD. NO TELEMETRY.</span><span class="sep">///</span>
+    <!-- dup for seamless scroll -->
+    <span>● RECORDING <b>1,284 EV/S</b></span><span class="sep">///</span>
+    <span>DRIFT <b>±0.3 PX</b></span><span class="sep">///</span>
+    <span>SESSION <b>00:04.218</b></span><span class="sep">///</span>
+    <span>MACOS · WINDOWS · <b>$15 ONE-TIME</b></span><span class="sep">///</span>
+    <span>NO SUBSCRIPTIONS</span><span class="sep">///</span>
+    <span>NO CLOUD. NO TELEMETRY.</span>
+  </div>
+</div>
+
+<section class="hero">
+  <h1 class="kinetic">
+    <span class="row"><span>Your&nbsp;</span></span>
+    <span class="row"><span class="swap"><span class="swap-inner">mouse</span></span><span class="ital">,&nbsp;remembered.</span></span>
+    <span class="row"><span class="stroke">Down to the pixel.</span></span>
+  </h1>
+
+  <div class="hero-bottom">
+    <p class="dek">
+      MacroDeck is a precision input recorder for macOS and Windows. It captures every click, keystroke, and scroll — <span class="ital">exactly</span> as you performed them — and replays them with microsecond fidelity. No cloud. No account. No subscription.
+    </p>
+    <div class="cta-block">
+      <a href="#" class="btn btn-ink">Download for macOS <span class="arrow">→</span></a>
+      <a href="#" class="btn btn-paper">Get it on Windows <span class="arrow">→</span></a>
+      <div class="fine">
+        <span>$15 · <b>ONE-TIME</b></span>
+        <span>14-DAY TRIAL</span>
+        <span>30-DAY REFUND</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="data-grid">
+  <div class="cell c2"><div class="cell-k">Capture rate</div><div class="cell-v" id="rate">1,284<span class="u">ev/s</span></div></div>
+  <div class="cell c2"><div class="cell-k">Replay drift</div><div class="cell-v">±0.3<span class="u">px</span></div></div>
+  <div class="cell c2"><div class="cell-k">Latency</div><div class="cell-v">0.7<span class="u">ms</span></div></div>
+  <div class="cell c3"><div class="cell-k">Session</div><div class="cell-v" id="elap">00:04.218</div></div>
+  <div class="cell c3"><div class="cell-k">Price</div><div class="cell-v">$15<span class="u">one-time</span></div></div>
+
+  <div class="caption c6">
+    <div class="num">01</div>
+    <div class="txt">"It's the first macro tool that actually feels <span class="ital">engineered</span>, not duct-taped. The replays are indistinguishable from hand input." <br><span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#888;display:block;margin-top:12px">— Early tester · QA automation lead</span></div>
+  </div>
+
+  <div class="specimen c6">
+    <div class="specimen-head">
+      <span>Input Signal · Ch. 1</span>
+      <span class="live">● LIVE</span>
+    </div>
+    <div class="scope">
+      <svg viewBox="0 0 600 120" preserveAspectRatio="none">
+        <line class="dash" x1="0" y1="60" x2="600" y2="60"/>
+        <line class="dash" x1="0" y1="30" x2="600" y2="30"/>
+        <line class="dash" x1="0" y1="90" x2="600" y2="90"/>
+        <path class="wave" id="w1" d=""/>
+        <path class="wave red" id="w2" d=""/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<div class="bottom-rule">
+  <span>Typeset in Fraunces + Geist Mono</span>
+  <span>Printed live in your browser</span>
+  <span>© MMXXVI · MacroDeck</span>
+</div>
+
+<script>
+  // swap word rotator
+  const words = ['mouse','keyboard','scroll','drag'];
+  const swap = document.querySelector('.swap-inner');
+  let wi = 0;
+  setInterval(()=>{ wi=(wi+1)%words.length; swap.textContent = words[wi]; }, 1800);
+
+  // elapsed + rate
+  const elap = document.getElementById('elap');
+  const rate = document.getElementById('rate');
+  let t = 4.218;
+  setInterval(()=>{
+    t += 0.05;
+    const mm = String(Math.floor(t/60)).padStart(2,'0');
+    const ss = String(Math.floor(t%60)).padStart(2,'0');
+    const ms = String(Math.floor((t*1000)%1000)).padStart(3,'0');
+    elap.textContent = `${mm}:${ss}.${ms}`;
+    rate.innerHTML = (1200 + Math.floor(Math.random()*200)).toLocaleString() + '<span class="u">ev/s</span>';
+  }, 50);
+
+  // oscilloscope
+  const w1 = document.getElementById('w1');
+  const w2 = document.getElementById('w2');
+  let phase = 0;
+  function draw(){
+    phase += 0.08;
+    let d1 = 'M 0 60';
+    let d2 = 'M 0 60';
+    for (let x = 0; x <= 600; x += 4){
+      const y1 = 60 + Math.sin((x/40)+phase)*18 + Math.sin((x/17)+phase*.6)*6;
+      const y2 = 60 + Math.sin((x/28)-phase*.8)*26 + (Math.random()-.5)*3;
+      d1 += ` L ${x} ${y1.toFixed(1)}`;
+      d2 += ` L ${x} ${y2.toFixed(1)}`;
+    }
+    w1.setAttribute('d', d1);
+    w2.setAttribute('d', d2);
+    requestAnimationFrame(draw);
+  }
+  draw();
+</script>
+
+</body>
+</html>

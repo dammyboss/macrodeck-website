@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hero A — Constellation of Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#0a0a0d; --bg-1:#101014; --bg-2:#17171c; --bg-3:#1e1e25;
+    --border:rgba(255,255,255,.07); --border-mid:rgba(255,255,255,.12); --border-strong:rgba(255,255,255,.22);
+    --text-0:#f4f4f6; --text-1:#a3a3ac; --text-2:#6b6b74;
+    --accent:#ef4444; --accent-dim:#dc2626; --accent-glow:rgba(239,68,68,.45);
+    --amber:#f59e0b; --cyan:#22d3ee; --green:#10b981;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{font-size:16px;-webkit-font-smoothing:antialiased}
+  body{font-family:'Geist',sans-serif;background:var(--bg-0);color:var(--text-0);overflow-x:hidden;min-height:100vh}
+  ::selection{background:var(--accent);color:var(--bg-0)}
+  .mono{font-family:'Geist Mono',monospace;font-feature-settings:"tnum" 1,"zero" 1}
+  .italic-s{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400}
+
+  /* grid background */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
+  body::after{
+    content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.5;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.025 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;padding:20px 40px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);background:rgba(10,10,13,.6);border-bottom:1px solid var(--border)}
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Geist Mono',monospace;font-weight:600;font-size:14px;letter-spacing:.04em}
+  .logo-mark{width:22px;height:22px;border-radius:6px;background:var(--accent);display:grid;place-items:center;color:#fff;font-size:10px;box-shadow:0 0 0 1px rgba(255,255,255,.08), 0 6px 18px var(--accent-glow)}
+  .nav-tag{font-family:'Geist Mono',monospace;font-size:11px;color:var(--text-2);letter-spacing:.2em;text-transform:uppercase}
+
+  /* ─────── HERO A: CONSTELLATION ─────── */
+  .hero{
+    position:relative;z-index:2;min-height:100vh;padding:120px 40px 80px;
+    display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:center;max-width:1400px;margin:0 auto;
+  }
+  .hero-canvas{position:absolute;inset:0;z-index:0;pointer-events:none}
+
+  .hero-copy{position:relative;z-index:3}
+  .eyebrow{font-family:'Geist Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.25em;text-transform:uppercase;color:var(--text-2);display:flex;align-items:center;gap:12px;margin-bottom:28px}
+  .eyebrow::before{content:"";width:28px;height:1px;background:var(--text-2)}
+  .pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 var(--accent-glow);animation:pulse 1.8s infinite}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(239,68,68,.55)}
+    70%{box-shadow:0 0 0 10px rgba(239,68,68,0)}
+    100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}
+  }
+
+  h1{
+    font-family:'Geist Mono',monospace;
+    font-size:clamp(48px,7.2vw,104px);
+    font-weight:500;
+    line-height:.95;
+    letter-spacing:-.04em;
+    margin-bottom:28px;
+  }
+  h1 .italic-s{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--accent);letter-spacing:-.01em}
+  h1 .word{display:inline-block;opacity:0;transform:translateY(24px);animation:rise .9s cubic-bezier(.2,.8,.2,1) forwards}
+  h1 .word:nth-child(1){animation-delay:.05s}
+  h1 .word:nth-child(2){animation-delay:.12s}
+  h1 .word:nth-child(3){animation-delay:.19s}
+  h1 .word:nth-child(4){animation-delay:.26s}
+  h1 .word:nth-child(5){animation-delay:.33s}
+  h1 .word:nth-child(6){animation-delay:.4s}
+  h1 .word:nth-child(7){animation-delay:.47s}
+  @keyframes rise{to{opacity:1;transform:translateY(0)}}
+
+  .sub{font-size:18px;line-height:1.5;color:var(--text-1);max-width:520px;margin-bottom:36px;opacity:0;animation:rise .8s .55s cubic-bezier(.2,.8,.2,1) forwards}
+  .cta-row{display:flex;gap:14px;align-items:center;opacity:0;animation:rise .8s .7s cubic-bezier(.2,.8,.2,1) forwards;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:10px;font-family:'Geist Mono',monospace;font-size:13px;font-weight:500;letter-spacing:.02em;transition:all .25s cubic-bezier(.2,.8,.2,1);border:1px solid transparent}
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 6px 24px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,.15)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 32px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,.2)}
+  .btn-ghost{border-color:var(--border-mid);color:var(--text-0)}
+  .btn-ghost:hover{border-color:var(--border-strong);background:rgba(255,255,255,.03)}
+  .trust{font-family:'Geist Mono',monospace;font-size:11px;color:var(--text-2);letter-spacing:.08em;margin-left:4px}
+
+  /* event node window (right side) */
+  .stage{position:relative;z-index:3;aspect-ratio:1/1;max-width:560px;margin-left:auto;width:100%}
+  svg.constellation{width:100%;height:100%;overflow:visible}
+  .node{transform-origin:center;transform-box:fill-box}
+  .node-ring{fill:none;stroke:var(--border-mid);stroke-width:1}
+  .node-dot{fill:var(--bg-1);stroke:var(--border-strong);stroke-width:1.2}
+  .node.active .node-dot{fill:var(--accent);stroke:var(--accent)}
+  .node-label{font-family:'Geist Mono',monospace;font-size:10px;fill:var(--text-2);letter-spacing:.1em;text-transform:uppercase}
+  .edge{stroke:var(--border);stroke-width:1;fill:none;stroke-dasharray:3 4}
+  .edge.live{stroke:var(--accent);stroke-dasharray:6 6;animation:dash 1.2s linear infinite;opacity:.9}
+  @keyframes dash{to{stroke-dashoffset:-24}}
+  .cursor{fill:var(--accent);filter:drop-shadow(0 0 8px var(--accent-glow))}
+  .ring-pulse{fill:none;stroke:var(--accent);stroke-width:1.5;opacity:0;transform-origin:center;transform-box:fill-box}
+  .ring-pulse.on{animation:ringPulse 1.4s ease-out forwards}
+  @keyframes ringPulse{0%{opacity:.9;r:4}100%{opacity:0;r:40}}
+
+  .center-frame{fill:var(--bg-1);stroke:var(--border-mid);stroke-width:1}
+  .center-text{font-family:'Geist Mono',monospace;fill:var(--text-0);text-anchor:middle;font-size:14px;letter-spacing:.1em}
+  .center-sub{font-family:'Geist Mono',monospace;fill:var(--text-2);text-anchor:middle;font-size:10px;letter-spacing:.2em;text-transform:uppercase}
+  .tick{font-family:'Geist Mono',monospace;fill:var(--accent);text-anchor:middle;font-size:11px;letter-spacing:.12em}
+
+  /* floating metadata chips */
+  .chip{position:absolute;font-family:'Geist Mono',monospace;font-size:10px;padding:6px 10px;border-radius:7px;border:1px solid var(--border-mid);background:rgba(16,16,20,.85);backdrop-filter:blur(8px);color:var(--text-1);letter-spacing:.08em;animation:float 6s ease-in-out infinite}
+  .chip b{color:var(--text-0)}
+  .chip .k{color:var(--accent)}
+  .chip-1{top:6%;left:-4%;animation-delay:0s}
+  .chip-2{top:22%;right:-2%;animation-delay:1.2s}
+  .chip-3{bottom:18%;left:-6%;animation-delay:2.4s}
+  .chip-4{bottom:-2%;right:6%;animation-delay:.8s}
+  @keyframes float{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-8px)}
+  }
+
+  /* telemetry strip below */
+  .telemetry{
+    max-width:1400px;margin:0 auto;padding:0 40px 80px;position:relative;z-index:3;
+    display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  }
+  .tcell{padding:28px 24px;border-right:1px solid var(--border);position:relative;overflow:hidden}
+  .tcell:last-child{border-right:0}
+  .tlabel{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-2);margin-bottom:8px}
+  .tvalue{font-family:'Geist Mono',monospace;font-size:28px;font-weight:500;color:var(--text-0)}
+  .tvalue .u{color:var(--text-2);font-size:14px;margin-left:4px}
+  .tcell::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:40%;background:linear-gradient(90deg, var(--accent), transparent);animation:scan 3.2s ease-in-out infinite}
+  @keyframes scan{0%,100%{transform:translateX(-20%)}50%{transform:translateX(200%)}}
+
+  @media (max-width:900px){
+    .hero{grid-template-columns:1fr;padding-top:100px}
+    .stage{max-width:420px;margin:0 auto}
+    .telemetry{grid-template-columns:repeat(2,1fr)}
+    .tcell:nth-child(2){border-right:0}
+    .tcell:nth-child(1),.tcell:nth-child(2){border-bottom:1px solid var(--border)}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><span class="logo-mark">◆</span> MacroDeck</div>
+  <div class="nav-tag">HERO VARIANT / A · CONSTELLATION</div>
+</nav>
+
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow"><span class="pulse-dot"></span> LIVE · RECORDING 1,284 EVENTS/SEC</div>
+    <h1>
+      <span class="word">Every</span>
+      <span class="word">click,</span>
+      <span class="word">keystroke,</span>
+      <span class="word">and</span>
+      <span class="word italic-s">motion</span>
+      <span class="word">—</span>
+      <span class="word">charted.</span>
+    </h1>
+    <p class="sub">MacroDeck captures your intent as a constellation of events, then replays it with microsecond precision. No cloud. No latency. No guesswork.</p>
+    <div class="cta-row">
+      <a href="#" class="btn btn-primary">Download for macOS →</a>
+      <a href="#" class="btn btn-ghost">Watch demo</a>
+      <span class="trust mono">$15 · ONE-TIME · NO SUBSCRIPTION</span>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="chip chip-1"><b class="k">◆</b> keydown <b>⌘C</b></div>
+    <div class="chip chip-2">x:<b>1284</b> y:<b>712</b> · <b class="k">click</b></div>
+    <div class="chip chip-3">drift <b>±0.3px</b> · <b class="k">LOCKED</b></div>
+    <div class="chip chip-4">t+<b>00:04.218</b></div>
+
+    <svg class="constellation" viewBox="0 0 560 560">
+      <defs>
+        <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(239,68,68,.25)"/>
+          <stop offset="70%" stop-color="rgba(239,68,68,0)"/>
+        </radialGradient>
+      </defs>
+      <circle cx="280" cy="280" r="240" fill="url(#halo)"/>
+
+      <!-- orbit rings -->
+      <circle class="node-ring" cx="280" cy="280" r="140"/>
+      <circle class="node-ring" cx="280" cy="280" r="210" stroke-dasharray="2 6"/>
+
+      <!-- edges -->
+      <g>
+        <path class="edge" d="M 280 280 L 130 120"/>
+        <path class="edge live" d="M 280 280 L 440 150"/>
+        <path class="edge" d="M 280 280 L 470 360"/>
+        <path class="edge" d="M 280 280 L 340 470"/>
+        <path class="edge live" d="M 280 280 L 120 420"/>
+        <path class="edge" d="M 280 280 L 90 250"/>
+      </g>
+
+      <!-- nodes -->
+      <g class="node"><circle class="node-dot" cx="130" cy="120" r="7"/><text class="node-label" x="100" y="106">⌘ C</text></g>
+      <g class="node active"><circle class="node-dot" cx="440" cy="150" r="8"/><text class="node-label" x="454" y="140">CLICK</text><circle class="ring-pulse on" cx="440" cy="150" r="4"/></g>
+      <g class="node"><circle class="node-dot" cx="470" cy="360" r="7"/><text class="node-label" x="484" y="356">DRAG</text></g>
+      <g class="node"><circle class="node-dot" cx="340" cy="470" r="7"/><text class="node-label" x="352" y="488">⇧ TAB</text></g>
+      <g class="node active"><circle class="node-dot" cx="120" cy="420" r="8"/><text class="node-label" x="62" y="420">SCROLL</text><circle class="ring-pulse on" cx="120" cy="420" r="4" style="animation-delay:.6s"/></g>
+      <g class="node"><circle class="node-dot" cx="90" cy="250" r="7"/><text class="node-label" x="24" y="248">KEYUP</text></g>
+
+      <!-- center badge -->
+      <rect class="center-frame" x="206" y="238" width="148" height="84" rx="10"/>
+      <text class="center-text" x="280" y="272">MACRODECK</text>
+      <text class="center-sub" x="280" y="290">SESSION · 00:04.218</text>
+      <text class="tick" x="280" y="310">◉ RECORDING</text>
+
+      <!-- moving cursor -->
+      <polygon class="cursor" points="0,0 0,16 4,12 7,18 9,17 6,12 11,12">
+        <animateMotion dur="6s" repeatCount="indefinite" path="M 280 280 L 440 150 L 470 360 L 120 420 L 280 280"/>
+      </polygon>
+    </svg>
+  </div>
+</section>
+
+<section class="telemetry">
+  <div class="tcell"><div class="tlabel">Capture rate</div><div class="tvalue" id="v1">1,284<span class="u">ev/s</span></div></div>
+  <div class="tcell"><div class="tlabel">Replay drift</div><div class="tvalue">±0.3<span class="u">px</span></div></div>
+  <div class="tcell"><div class="tlabel">Session size</div><div class="tvalue" id="v3">42<span class="u">KB</span></div></div>
+  <div class="tcell"><div class="tlabel">Uptime</div><div class="tvalue" id="v4">00:04.218</div></div>
+</section>
+
+<script>
+  // live-tick telemetry
+  const v1 = document.getElementById('v1');
+  const v3 = document.getElementById('v3');
+  const v4 = document.getElementById('v4');
+  let t = 4.218;
+  setInterval(() => {
+    t += 0.05;
+    const mm = String(Math.floor(t/60)).padStart(2,'0');
+    const ss = String(Math.floor(t%60)).padStart(2,'0');
+    const ms = String(Math.floor((t*1000)%1000)).padStart(3,'0');
+    v4.innerHTML = `${mm}:${ss}.${ms}`;
+    v1.innerHTML = (1200 + Math.floor(Math.random()*200)).toLocaleString() + '<span class="u">ev/s</span>';
+    v3.innerHTML = (42 + Math.floor(t*2)) + '<span class="u">KB</span>';
+  }, 50);
+</script>
+
+</body>
+</html>

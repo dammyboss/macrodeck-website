@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hero B — Live Terminal Replay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#0a0a0d; --bg-1:#101014; --bg-2:#17171c; --bg-3:#1e1e25;
+    --border:rgba(255,255,255,.07); --border-mid:rgba(255,255,255,.12); --border-strong:rgba(255,255,255,.22);
+    --text-0:#f4f4f6; --text-1:#a3a3ac; --text-2:#6b6b74;
+    --accent:#ef4444; --accent-dim:#dc2626; --accent-glow:rgba(239,68,68,.45);
+    --amber:#f59e0b; --cyan:#22d3ee; --green:#10b981;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Geist',sans-serif;background:var(--bg-0);color:var(--text-0);overflow-x:hidden;min-height:100vh;-webkit-font-smoothing:antialiased}
+  ::selection{background:var(--accent);color:var(--bg-0)}
+  .mono{font-family:'Geist Mono',monospace;font-feature-settings:"tnum" 1,"zero" 1}
+  .italic-s{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400}
+
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(1200px 800px at 20% 0%, rgba(239,68,68,.08), transparent 60%),
+      radial-gradient(800px 600px at 100% 100%, rgba(34,211,238,.04), transparent 50%);
+  }
+  /* scanlines */
+  body::after{
+    content:"";position:fixed;inset:0;z-index:1;pointer-events:none;
+    background:repeating-linear-gradient(to bottom, rgba(255,255,255,.012) 0 1px, transparent 1px 3px);
+    mix-blend-mode:overlay;
+  }
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;padding:20px 40px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);background:rgba(10,10,13,.6);border-bottom:1px solid var(--border)}
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Geist Mono',monospace;font-weight:600;font-size:14px}
+  .logo-mark{width:22px;height:22px;border-radius:6px;background:var(--accent);display:grid;place-items:center;color:#fff;font-size:10px;box-shadow:0 6px 18px var(--accent-glow)}
+  .nav-tag{font-family:'Geist Mono',monospace;font-size:11px;color:var(--text-2);letter-spacing:.2em;text-transform:uppercase}
+
+  .hero{position:relative;z-index:2;min-height:100vh;padding:140px 40px 80px;max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:56px}
+
+  .kicker{display:flex;align-items:center;gap:14px;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--text-2);margin-bottom:24px}
+  .kicker::before{content:"";width:28px;height:1px;background:var(--text-2)}
+  .blink{display:inline-block;width:7px;height:12px;background:var(--accent);animation:blink 1s steps(2) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  h1{
+    font-family:'Geist Mono',monospace;
+    font-size:clamp(44px,8.4vw,128px);
+    font-weight:500;letter-spacing:-.045em;line-height:.92;margin-bottom:32px;
+  }
+  h1 .italic-s{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--accent)}
+  h1 .glitch{position:relative;display:inline-block}
+  h1 .glitch::before, h1 .glitch::after{
+    content:attr(data-text);position:absolute;top:0;left:0;right:0;
+    mix-blend-mode:screen;pointer-events:none;
+  }
+  h1 .glitch::before{color:var(--accent);animation:shiftL 3.6s steps(40) infinite}
+  h1 .glitch::after{color:var(--cyan);animation:shiftR 3.6s steps(40) infinite}
+  @keyframes shiftL{0%,92%,100%{transform:translate(0,0);opacity:0}94%{transform:translate(-2px,1px);opacity:.6}96%{transform:translate(1px,-1px);opacity:.4}}
+  @keyframes shiftR{0%,92%,100%{transform:translate(0,0);opacity:0}94%{transform:translate(2px,-1px);opacity:.6}96%{transform:translate(-1px,1px);opacity:.4}}
+
+  .sub{font-size:19px;max-width:620px;color:var(--text-1);line-height:1.55;margin-bottom:36px}
+  .cta-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:10px;font-family:'Geist Mono',monospace;font-size:13px;font-weight:500;letter-spacing:.02em;border:1px solid transparent;transition:all .25s cubic-bezier(.2,.8,.2,1)}
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 6px 24px var(--accent-glow)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 32px var(--accent-glow)}
+  .btn-ghost{border-color:var(--border-mid);color:var(--text-0)}
+  .btn-ghost:hover{border-color:var(--border-strong);background:rgba(255,255,255,.03)}
+  .trust{font-family:'Geist Mono',monospace;font-size:11px;color:var(--text-2);letter-spacing:.08em}
+
+  /* terminal window */
+  .terminal{
+    position:relative;border-radius:14px;border:1px solid var(--border-mid);
+    background:linear-gradient(180deg, #0e0e12, #08080b);
+    box-shadow:0 30px 80px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.04);
+    overflow:hidden;
+  }
+  .term-bar{display:flex;align-items:center;gap:10px;padding:12px 18px;border-bottom:1px solid var(--border)}
+  .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+  .term-title{font-family:'Geist Mono',monospace;font-size:11px;color:var(--text-2);margin-left:10px;letter-spacing:.1em}
+  .term-meta{margin-left:auto;font-family:'Geist Mono',monospace;font-size:11px;color:var(--text-2)}
+  .term-meta .rec{color:var(--accent)}
+  .term-meta .rec::before{content:"●";margin-right:4px;animation:blink 1.2s infinite}
+
+  .term-body{padding:22px 22px 26px;font-family:'Geist Mono',monospace;font-size:14px;line-height:1.85;min-height:380px;position:relative}
+  .line{display:flex;gap:16px;white-space:pre;opacity:0;transform:translateY(6px);animation:lineIn .4s ease-out forwards}
+  .line .ts{color:var(--text-2)}
+  .line .tag{color:var(--accent);min-width:92px}
+  .line .tag.key{color:var(--amber)}
+  .line .tag.scroll{color:var(--cyan)}
+  .line .tag.move{color:var(--green)}
+  .line .payload{color:var(--text-0)}
+  .line .coord{color:var(--text-1)}
+  @keyframes lineIn{to{opacity:1;transform:translateY(0)}}
+  .caret{display:inline-block;width:8px;height:14px;background:var(--accent);vertical-align:middle;animation:blink 1s steps(2) infinite;margin-left:2px}
+
+  .prompt{color:var(--text-2)}
+  .prompt::before{content:"▸";color:var(--accent);margin-right:8px}
+
+  /* side callouts */
+  .callouts{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+  .co{border:1px solid var(--border);border-radius:10px;padding:18px;background:rgba(16,16,20,.6);backdrop-filter:blur(8px)}
+  .co-k{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-2);margin-bottom:8px;display:flex;justify-content:space-between}
+  .co-v{font-family:'Geist Mono',monospace;font-size:22px;font-weight:500}
+  .co-v .u{color:var(--text-2);font-size:12px;margin-left:4px}
+  .co .bar{height:3px;background:var(--bg-3);border-radius:3px;margin-top:12px;overflow:hidden}
+  .co .bar span{display:block;height:100%;background:linear-gradient(90deg, var(--accent), var(--amber));animation:fill 2.2s ease-in-out infinite alternate}
+  @keyframes fill{from{width:30%}to{width:92%}}
+
+  @media (max-width:800px){.callouts{grid-template-columns:1fr 1fr}.co:last-child{grid-column:span 2}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><span class="logo-mark">◆</span> MacroDeck</div>
+  <div class="nav-tag">HERO VARIANT / B · TERMINAL REPLAY</div>
+</nav>
+
+<section class="hero">
+  <div>
+    <div class="kicker"><span class="blink"></span> session.replay(v2.1) · μs-precision</div>
+    <h1>
+      Record once.<br>
+      <span class="glitch" data-text="Replay forever.">Replay <span class="italic-s">forever.</span></span>
+    </h1>
+    <p class="sub">A terminal-grade macro engine that ships as a polished desktop app. Watch the event log tick in real time — that's what gets replayed, byte-for-byte, no drift, no surprises.</p>
+    <div class="cta-row">
+      <a href="#" class="btn btn-primary">Get MacroDeck · $15</a>
+      <a href="#" class="btn btn-ghost">View source on GitHub</a>
+      <span class="trust mono">MACOS 13+ · WINDOWS 10/11</span>
+    </div>
+  </div>
+
+  <div>
+    <div class="terminal">
+      <div class="term-bar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="term-title">~/macrodeck/session.mdk · recording</span>
+        <span class="term-meta"><span class="rec">REC</span> · <span id="elapsed">00:04.218</span> · <span id="count">218</span> events</span>
+      </div>
+      <div class="term-body" id="log">
+        <div class="line prompt">macrodeck record --session=untitled.mdk<span class="caret"></span></div>
+      </div>
+    </div>
+
+    <div class="callouts">
+      <div class="co">
+        <div class="co-k"><span>CAPTURE RATE</span><span style="color:var(--green)">●</span></div>
+        <div class="co-v" id="rate">1,284<span class="u">ev/s</span></div>
+        <div class="bar"><span></span></div>
+      </div>
+      <div class="co">
+        <div class="co-k"><span>DRIFT</span><span style="color:var(--green)">●</span></div>
+        <div class="co-v">±0.3<span class="u">px</span></div>
+        <div class="bar"><span style="animation-delay:-.8s"></span></div>
+      </div>
+      <div class="co">
+        <div class="co-k"><span>BUFFER</span><span style="color:var(--amber)">●</span></div>
+        <div class="co-v" id="buf">42<span class="u">KB</span></div>
+        <div class="bar"><span style="animation-delay:-1.4s"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const log = document.getElementById('log');
+  const elapsedEl = document.getElementById('elapsed');
+  const countEl = document.getElementById('count');
+  const rateEl = document.getElementById('rate');
+  const bufEl = document.getElementById('buf');
+
+  const events = [
+    {tag:'click', cls:'',         payload:'LeftDown',  coord:'x=1284 y=712'},
+    {tag:'keydown',cls:'key',     payload:'⌘ C',       coord:'vk=67'},
+    {tag:'keyup', cls:'key',      payload:'⌘ C',       coord:'vk=67'},
+    {tag:'move',  cls:'move',     payload:'cursor →',   coord:'Δ=+128,+44'},
+    {tag:'scroll',cls:'scroll',   payload:'wheel -3',  coord:'y=-360'},
+    {tag:'click', cls:'',         payload:'LeftUp',    coord:'x=1284 y=712'},
+    {tag:'keydown',cls:'key',     payload:'⇧ TAB',     coord:'vk=9'},
+    {tag:'move',  cls:'move',     payload:'cursor →',  coord:'Δ=-40,+12'},
+    {tag:'click', cls:'',         payload:'RightDown', coord:'x=642 y=388'},
+    {tag:'keydown',cls:'key',     payload:'↵',         coord:'vk=13'},
+  ];
+
+  let t = 4.218;
+  let count = 218;
+  let idx = 0;
+
+  function fmt(t){
+    const mm = String(Math.floor(t/60)).padStart(2,'0');
+    const ss = String(Math.floor(t%60)).padStart(2,'0');
+    const ms = String(Math.floor((t*1000)%1000)).padStart(3,'0');
+    return `${mm}:${ss}.${ms}`;
+  }
+
+  function addLine(){
+    const e = events[idx % events.length];
+    idx++;
+    const ts = fmt(t);
+    const line = document.createElement('div');
+    line.className = 'line';
+    line.innerHTML = `<span class="ts">${ts}</span><span class="tag ${e.cls}">${e.tag.padEnd(7)}</span><span class="payload">${e.payload}</span><span class="coord">${e.coord}</span>`;
+    // keep the prompt line at the bottom
+    const prompt = log.querySelector('.prompt');
+    log.insertBefore(line, prompt);
+    // trim
+    while (log.querySelectorAll('.line').length > 9) log.querySelector('.line').remove();
+  }
+
+  setInterval(()=>{
+    t += 0.32;
+    count += Math.floor(Math.random()*6)+2;
+    elapsedEl.textContent = fmt(t);
+    countEl.textContent = count;
+    rateEl.innerHTML = (1200 + Math.floor(Math.random()*200)).toLocaleString() + '<span class="u">ev/s</span>';
+    bufEl.innerHTML = (42 + Math.floor(t*2)) + '<span class="u">KB</span>';
+    addLine();
+  }, 320);
+</script>
+
+</body>
+</html>
