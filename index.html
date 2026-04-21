@@ -175,14 +175,15 @@
   h1{
     font-family:'Cormorant Garamond',serif;
     font-weight:300;
-    font-size:clamp(56px,9.2vw,150px);
+    font-size:clamp(56px,8.2vw,128px);
     line-height:.96;
     letter-spacing:-.03em;
-    max-width:1200px;
+    max-width:860px;
     margin-bottom:40px;
     position:relative;z-index:5;
     min-height:3.1em;
     perspective:1200px;
+    transform-origin:0 50%;
   }
   h1 .ital{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--gold)}
   h1 .accent{color:var(--accent)}
@@ -204,7 +205,7 @@
   h1 .caret{display:inline-block;width:0.05em;height:0.8em;background:var(--accent);vertical-align:-0.05em;margin-left:0.04em;box-shadow:0 0 24px var(--accent-soft);animation:caretBlink 0.9s steps(2) infinite}
   @keyframes caretBlink{50%{opacity:0}}
   /* D · Ink bleed */
-  h1 .layer{position:absolute;inset:0;pointer-events:none;will-change:filter,opacity,transform,letter-spacing}
+  h1 .layer{position:absolute;inset:0;pointer-events:none;will-change:filter,opacity,transform,letter-spacing;transform-origin:0 50%}
   h1 .layer.ink-out{animation:bleedOut 1400ms var(--ease) forwards}
   @keyframes bleedOut{
     0%  {filter:blur(0) saturate(1) hue-rotate(0);opacity:1;letter-spacing:-.03em;transform:scale(1)}
