@@ -103,6 +103,10 @@
 
   .grid{display:grid;grid-template-columns:1.35fr 1fr;gap:48px;margin-top:56px;align-items:start}
   @media (max-width:900px){.grid{grid-template-columns:1fr;gap:32px}main{padding:120px 24px 60px} nav.top{padding:18px 22px}}
+  @media (hover: none), (pointer: coarse){
+    body, button, a, input, select, textarea, .pay-tab, .agree label{cursor:auto !important}
+    .cursor-core, .cursor-label{display:none !important}
+  }
 
   .form-card{border:1px solid var(--rule);border-radius:20px;background:linear-gradient(160deg, rgba(12,12,17,.7), rgba(6,6,8,.85));backdrop-filter:blur(10px);overflow:hidden;position:relative;opacity:0;animation:fadeUp 1s .7s var(--ease) forwards}
   .form-card::before{content:"";position:absolute;inset:0;background:radial-gradient(400px 200px at 0% 0%, rgba(239,68,68,.06), transparent 60%);pointer-events:none}

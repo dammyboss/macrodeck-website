@@ -140,14 +140,44 @@
   nav.top .links{display:flex;gap:34px;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-1)}
   nav.top .links a{transition:color .25s}
   nav.top .links a:hover{color:var(--ink-0)}
+
+  /* Hamburger button — hidden on desktop, shown on mobile */
+  .nav-toggle{display:none;width:38px;height:38px;border:1px solid var(--rule-mid);border-radius:8px;background:rgba(12,12,17,.4);align-items:center;justify-content:center;flex-direction:column;gap:4px;cursor:pointer;padding:0;backdrop-filter:blur(8px)}
+  .nav-toggle span{display:block;width:18px;height:1.5px;background:var(--ink-0);border-radius:1px;transition:all .3s var(--ease)}
+  .nav-toggle.open span:nth-child(1){transform:translateY(5.5px) rotate(45deg)}
+  .nav-toggle.open span:nth-child(2){opacity:0}
+  .nav-toggle.open span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg)}
   nav.top .right{display:flex;align-items:center;gap:18px}
   nav.top .price-pill{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);padding:6px 12px;border:1px solid var(--ink-3);border-radius:100px}
   .nav-btn{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:10px 18px;border-radius:100px;background:var(--ink-0);color:var(--bg-0);font-weight:500;transition:all .3s var(--ease)}
   .nav-btn:hover{background:var(--accent);color:var(--ink-0)}
 
   @media (max-width:900px){
-    nav.top{padding:18px 22px}
-    nav.top .links{display:none}
+    nav.top{padding:14px 18px}
+    .nav-toggle{display:flex}
+    nav.top .links{
+      position:absolute;top:100%;left:0;right:0;
+      flex-direction:column;gap:0;padding:14px 22px 24px;
+      background:rgba(6,6,8,.96);backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--rule);
+      transform-origin:top;
+      transform:scaleY(0);opacity:0;pointer-events:none;
+      transition:transform .28s var(--ease), opacity .28s var(--ease);
+    }
+    nav.top .links.open{transform:scaleY(1);opacity:1;pointer-events:auto}
+    nav.top .links a{padding:14px 0;border-bottom:1px solid var(--rule);font-size:13px;color:var(--ink-0)}
+    nav.top .links a:last-child{border-bottom:0}
+    nav.top .price-pill{display:none}
+    .logo{font-size:18px;gap:10px}
+    .logo-mark{width:24px;height:24px;padding:4px;gap:2px}
+    .nav-btn{padding:8px 14px;font-size:10px}
+  }
+
+  /* Touch devices: restore native cursor + hide custom ring + trail */
+  @media (hover: none), (pointer: coarse){
+    body, button, a, input, select, textarea{cursor:auto !important}
+    .cursor-core, .cursor-label, canvas.trail{display:none !important}
+    .margin-note{display:none}
   }
 
   /* ─── SHARED TYPOGRAPHY ─── */
@@ -436,6 +466,9 @@
   <div class="right">
     <span class="price-pill">$15 · One-time</span>
     <a href="checkout.html" class="nav-btn">Buy →</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
@@ -893,6 +926,26 @@
     requestAnimationFrame(tick);
   }
   tick();
+
+  // ─── Mobile nav toggle ───
+  (function setupNav(){
+    const toggle = document.getElementById('navToggle');
+    const links = document.querySelector('nav.top .links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', () => {
+      const open = links.classList.toggle('open');
+      toggle.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    // Close on link click (sections scroll into view)
+    links.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        links.classList.remove('open');
+        toggle.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  })();
 
   // ─── ROTATING HEADLINE (4 animations on rotation) ───
   (function setupRotatingHeadline(){
